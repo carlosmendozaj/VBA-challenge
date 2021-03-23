@@ -2,6 +2,8 @@ VBAChallenge.vbs
 
 Sub Prueba_1()
 
+For Each ws In Worksheets
+
     Dim ticker as String
 
     Dim Yearly_change as Double
@@ -22,20 +24,20 @@ Sub Prueba_1()
     Dim Open_value As Double
     Dim Close_value As Double
     
-    Cells(1, 9).Value = "Ticker"
-    Cells(1, 10).Value = "Yearly Change"
-    Cells(1, 11).Value = "Percent Change"
-    Cells(1, 12).Value = "Total Stock Volume"
+    ws.Cells(1, 9).Value = "Ticker"
+    ws.Cells(1, 10).Value = "Yearly Change"
+    ws.Cells(1, 11).Value = "Percent Change"
+    ws.Cells(1, 12).Value = "Total Stock Volume"
 
     'Total Stock Volume counter:
 
         For i = 2 To LastRow
 
-            If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+            If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
 
-                Total_Stock = Total_Stock + Cells(i, 7).Value
+                Total_Stock = Total_Stock + ws.Cells(i, 7).Value
 
-                Range("L" & Summary_Table_Row).Value = Total_Stock
+                ws.Range("L" & Summary_Table_Row).Value = Total_Stock
                 
                 Summary_Table_Row = Summary_Table_Row + 1
                 
@@ -43,7 +45,7 @@ Sub Prueba_1()
 
             Else
 
-                Total_Stock = Total_Stock + Cells(i, 7).Value
+                Total_Stock = Total_Stock + ws.Cells(i, 7).Value
 
             End If
 
@@ -56,20 +58,20 @@ Sub Prueba_1()
     'Ticker symbol, yearly change from opening price to the closing price, percent change
 
         For i = 2 To LastRow    
-            Open_value = Cells(i, 3).Value
+            Open_value = ws.Cells(i, 3).Value
 
-            ticker = Cells(i, 1).Value
-            Range("I" & Summary_Table_Row).Value = ticker
+            ticker = ws.Cells(i, 1).Value
+            ws.Range("I" & Summary_Table_Row).Value = ticker
 
 
-            While Cells(i, 1).Value = Cells(i + 1, 1).Value
+            While ws.Cells(i, 1).Value = ws.Cells(i + 1, 1).Value
 
                 i = i + 1
                 
             Wend 
             
 
-            Close_value = Cells(i, 6).Value
+            Close_value = ws.Cells(i, 6).Value
          
 
             Yearly_change = Close_value - Open_value
@@ -82,11 +84,20 @@ Sub Prueba_1()
 
             Yearly_change = Close_value - Open_value
 
-            Range("J" & Summary_Table_Row).Value = Yearly_change
+            ws.Range("J" & Summary_Table_Row).Value = Yearly_change
 
-            Percent_change = ((Close_value * 100) / Open_value) - 100
-            Range("K" & Summary_Table_Row).Value = Percent_change
-            'Range("K:K").NumberFormat = "0.00%"
+            If Open_value = 0 Then
+
+                Percent_change = 0
+
+            Else
+                Percent_change = (Close_value - Open_value ) / Open_value
+
+            End If
+            
+            'Percent_change = ((Close_value * 100) / Open_value) - 100
+            ws.Range("K" & Summary_Table_Row).Value = Percent_change
+            ws.Range("K:K").NumberFormat = "0.00%"
 
             
             Summary_Table_Row = Summary_Table_Row + 1
@@ -101,7 +112,7 @@ Sub Prueba_1()
     Dim cond2 As FormatCondition
 
     Dim Myrange As Range
-    Set Myrange = Range("J2", Range("J2").End(xlDown))
+    Set Myrange = ws.Range("J2", ws.Range("J2").End(xlDown))
 
     Set cond1 = Myrange.FormatConditions.Add(xlCellValue, xlGreater, "0")
     Set cond2 = Myrange.FormatConditions.Add(xlCellValue, xlLess, "0")
@@ -116,24 +127,26 @@ Sub Prueba_1()
 
     'Bonus:
 
-    Cells(1, 16).Value = "Ticker"
-    Cells(1, 17).Value = "Value"
-    Range("O2").Value = "Greatest Increase %"
-    Range("O3").Value = "Greatest Decrease %"
-    Range("O4").Value = "Gretest Total Volume"
+    ws.Cells(1, 16).Value = "Ticker"
+    ws.Cells(1, 17).Value = "Value"
+    ws.Range("O2").Value = "Greatest Increase %"
+    ws.Range("O3").Value = "Greatest Decrease %"
+    ws.Range("O4").Value = "Gretest Total Volume"
     
     Dim Max_inc as Double
     Dim Min_inc as Double
     Dim Max_vol as Double
 
-    Max_inc = Application.worksheetfunction.max(range("J:J"))
-    cells(2, 17).Value = Max_inc
+    Max_inc = Application.worksheetfunction.max(ws.range("J:J"))
+    ws.cells(2, 17).Value = Max_inc
 
-    Min_inc = Application.worksheetfunction.min(range("J:J"))
-    cells(3, 17).Value = Min_inc
+    Min_inc = Application.worksheetfunction.min(ws.range("J:J"))
+    ws.cells(3, 17).Value = Min_inc
 
-    Max_vol = Application.worksheetfunction.max(range("L:L"))
-    cells(4, 17).Value = Max_vol
+    Max_vol = Application.worksheetfunction.max(ws.range("L:L"))
+    ws.cells(4, 17).Value = Max_vol
+
+Next ws
 
 End Sub   
 
