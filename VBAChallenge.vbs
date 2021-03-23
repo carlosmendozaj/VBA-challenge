@@ -86,6 +86,7 @@ Sub Prueba_1()
 
             Percent_change = ((Close_value * 100) / Open_value) - 100
             Range("K" & Summary_Table_Row).Value = Percent_change
+            'Range("K:K").NumberFormat = "0.00%"
 
             
             Summary_Table_Row = Summary_Table_Row + 1
@@ -113,6 +114,26 @@ Sub Prueba_1()
         .Interior.Color = vbRed
     End With
 
+    'Bonus:
+
+    Cells(1, 16).Value = "Ticker"
+    Cells(1, 17).Value = "Value"
+    Range("O2").Value = "Greatest Increase %"
+    Range("O3").Value = "Greatest Decrease %"
+    Range("O4").Value = "Gretest Total Volume"
+    
+    Dim Max_inc as Double
+    Dim Min_inc as Double
+    Dim Max_vol as Double
+
+    Max_inc = Application.worksheetfunction.max(range("J:J"))
+    cells(2, 17).Value = Max_inc
+
+    Min_inc = Application.worksheetfunction.min(range("J:J"))
+    cells(3, 17).Value = Min_inc
+
+    Max_vol = Application.worksheetfunction.max(range("L:L"))
+    cells(4, 17).Value = Max_vol
 
 End Sub   
 
